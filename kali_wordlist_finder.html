@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    .wordlist-container {
+      background-color: #1A1A1A;
+      border: 2px solid #3B3B3B;
+      border-radius: 10px;
+      padding: 20px;
+      width: 750px;
+      margin: 20px auto;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+    }
+    select {
+      width: 98%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #333333;
+      border: 1px solid #cccccc;
+      color: #ffffff;
+      font-size: 14px;
+    }
+    #wordlistOutput {
+      width: 95%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #333333;
+      border: 1px solid #cccccc;
+      color: #ffffff;
+      font-size: 14px;
+      min-height: 400px;
+      text-align: left;
+      resize: vertical;
+      font-family: 'Courier New', monospace;
+    }
+    p.note {
+      font-size: 12px;
+      color: #cccccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="wordlist-container">
+    <h3>📑 Wordlists de Kali Linux</h3>
+    <select id="wordlistCategory" onchange="generateWordlistPaths()">
+      <option value="">Selecciona una categoría</option>
+      <option value="users">🧑 Usuarios</option>
+      <option value="user_passwords">🔑 Contraseñas de Usuario</option>
+      <option value="wifi_router_passwords">🛜 Contraseñas de Wifi / Router</option>
+      <option value="services_passwords">💾 Contraseñas de Servicios / Hardware</option>
+      <option value="user_pass_comb">🧑🔑 Combinaciones Usuario / Contraseña</option>
+      <option value="domains_subdomains">🌐 Dominios y Subdominios</option>
+      <option value="host_names">🖥️ Nombres de Host</option>
+      <option value="cookies_sessions">🍪 Cookies y Valores de Sesión</option>
+      <option value="extensions">📄 Extensiones de archivos</option>
+      <option value="dirs_files">📁 Directorios y Archivos</option>
+      <option value="injection_payloads">💉 Payloads de Inyección</option>
+      <option value="chars_nums">*️⃣ Caracteres y Números</option>
+      <option value="vulns">⚠️ Vulnerabilidades Conocidas</option>
+    </select>
+    <textarea id="wordlistOutput" readonly placeholder="-- Las rutas aparecerán aquí --"></textarea>
+    <p class="note">Nota: Rutas de Kali Linux</p>
+  </div>
+
+  <script>
+    const wordlistDatabase = {
+      users: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/dirb/others/names.txt',
+        '/usr/share/wordlists/metasploit/namelist.txt',
+        '/usr/share/wordlists/dirb/others/best110.txt',
+        '/usr/share/wordlists/dirb/others/best1050.txt',
+        '/usr/share/wordlists/legion/ssh-user.txt',
+        '/usr/share/wordlists/metasploit/db2_default_user.txt',
+        '/usr/share/wordlists/metasploit/default_users_for_services_unhash.txt',
+        '/usr/share/wordlists/metasploit/ipmi_users.txt',
+        '/usr/share/wordlists/metasploit/http_default_users.txt',
+        '/usr/share/wordlists/metasploit/idrac_default_user.txt',
+        '/usr/share/wordlists/metasploit/mirai_user.txt',
+        '/usr/share/wordlists/metasploit/multi_vendor_ccdv_users.txt',
+        '/usr/share/wordlists/metasploit/tomcat_mgr_default_users.txt',
+        '/usr/share/wordlists/metasploit/unix_users.txt',
+        '/usr/share/wordlists/wfuzz/others/names.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Usernames/top-usernames-shortlist.txt',
+        '/usr/share/seclists/Usernames/xato-net-10-million-usernames.txt'
+      ],
+      user_passwords: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/metasploit/password.lst',
+        '/usr/share/wordlists/legion/root-userpass.txt',
+        '/usr/share/wordlists/dirb/others/names.txt',
+        '/usr/share/wordlists/amass/all.txt',
+        '/usr/share/wordlists/rockyou.txt',
+        '/usr/share/wordlists/fern-wifi/common.txt',
+        '/usr/share/wordlists/john.lst',
+        '/usr/share/wordlists/metasploit/burnett_top_500.txt',
+        '/usr/share/wordlists/metasploit/burnett_top_1024.txt',
+        '/usr/share/wordlists/metasploit/dangerzone-a.txt',
+        '/usr/share/wordlists/metasploit/dangerzone-b.txt',
+        '/usr/share/wordlists/metasploit/db2_default_pass.txt',
+        '/usr/share/wordlists/metasploit/keyboard_patterns.txt',
+        '/usr/share/wordlists/metasploit/mirai_pass.txt',
+        '/usr/share/wordlists/metasploit/unix_passwords.txt',
+        '/usr/share/wordlists/wfuzz/others/common_pass.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Passwords/Leaked-Databases/rockyou.txt',
+        '/usr/share/seclists/Passwords/darkweb2017-top100.txt'
+      ],
+      wifi_router_passwords: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/wifite.txt',
+        '/usr/share/wordlists/fern-wifi/common.txt',
+        '/usr/share/wordlists/legion/routers-userpass.txt',
+        '/usr/share/wordlists/metasploit/dlink_telnet_backdoor.txt',
+        '/usr/share/wordlists/metasploit/mirai_pass.txt'
+      ],
+      services_passwords: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/metasploit/dlink_telnet_backdoor.txt',
+        '/usr/share/wordlists/metasploit/default_pass_for_services_unhash.txt',
+        '/usr/share/wordlists/metasploit/flask_secret_keys.txt',
+        '/usr/share/wordlists/legion/snmmp-default.txt',
+        '/usr/share/wordlists/legion/ssh-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/ssh-password.txt',
+        '/usr/share/wordlists/legion/telnet-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/tomcat-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/vnc-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/windows-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/db2-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/ftp-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/mssql-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/mysql-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/oracle-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/legion/postgres-betterdefaultpasslist.txt',
+        '/usr/share/wordlists/metasploit/http_owa_common_id.txt',
+        '/usr/share/wordlists/metasploit/idrac_default_pass.txt',
+        '/usr/share/wordlists/metasploit/ipmi_passwords.txt',
+        '/usr/share/wordlists/metasploit/joomla.txt',
+        '/usr/share/wordlists/metasploit/mirai_pass.txt',
+        '/usr/share/wordlists/metasploit/multi_vendor_ccdv_pass.txt',
+        '/usr/share/wordlists/metasploit/oracle_default_pass_swords.csv',
+        '/usr/share/wordlists/metasploit/postgres_default_pass.txt',
+        '/usr/share/wordlists/metasploit/sid.txt',
+        '/usr/share/wordlists/metasploit/snmp_default_pass.txt',
+        '/usr/share/wordlists/metasploit/superset_secret_keys.txt',
+        '/usr/share/wordlists/metasploit/telnet_telnet_asp.net_ajax_versions.txt',
+        '/usr/share/wordlists/metasploit/telnet_cdata_fth_b.txt',
+        '/usr/share/wordlists/metasploit/ftp.txt',
+        '/usr/share/wordlists/metasploit/tomcat_mgr_default_pass.txt',
+        '/usr/share/wordlists/metasploit/unix_passwords.txt',
+        '/usr/share/wordlists/metasploit/vnc_passwords.txt',
+        '/usr/share/wordlists/fasttrack.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Passwords/Default-Credentials/default-passwords.txt',
+        '/usr/share/seclists/Miscellaneous/wordpress-default.txt'
+      ],
+      user_pass_comb: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/metasploit/root_userpass.txt',
+        '/usr/share/wordlists/metasploit/mirai_user_pass.txt',
+        '/usr/share/wordlists/metasploit/routers_userpass.txt',
+        '/usr/share/wordlists/metasploit/postgres_default_userpass.txt',
+        '/usr/share/wordlists/metasploit/piata_ssh_userpass.txt',
+        '/usr/share/wordlists/metasploit/oracle_default_userpass.txt',
+        '/usr/share/wordlists/metasploit/http_default_userpass.txt',
+        '/usr/share/wordlists/metasploit/default_userpass_for_services_unhash.txt',
+        '/usr/share/wordlists/metasploit/db2_default_userpass.txt',
+        '/usr/share/wordlists/metasploit/ms400net_default_userpass.txt',
+        '/usr/share/wordlists/metasploit/scada_default_user_pass.txt',
+        '/usr/share/wordlists/metasploit/telnet_backdoor_userpass.txt',
+        '/usr/share/wordlists/metasploit/tomcat_mgr_default_userpass.txt'
+      ],
+      domains_subdomains: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/amass/all.txt',
+        '/usr/share/wordlists/nmap.lst',
+        '/usr/share/wordlists/dnsmap.txt',
+        '/usr/share/wordlists/amass/bitquark_subdomains_top100k.txt',
+        '/usr/share/wordlists/amass/p50kprefixes.txt',
+        '/usr/share/wordlists/amass/fierce-hostlist.txt',
+        '/usr/share/wordlists/amass/jhaddix_all.txt',
+        '/usr/share/wordlists/dirb/spanish.txt',
+        '/usr/share/wordlists/dirb/common.txt',
+        '/usr/share/wordlists/amass/sorted_knock_dnsrecon_econ_fierce_recon-ng.txt',
+        '/usr/share/wordlists/amass/subdomains.lst',
+        '/usr/share/wordlists/amass/top1mil-5000.txt',
+        '/usr/share/wordlists/amass/top1mil-20000.txt',
+        '/usr/share/wordlists/amass/top1mil-100000.txt',
+        '/usr/share/wordlists/legion/gvit_subdomain_wordlist.txt',
+        '/usr/share/wordlists/metasploit/common_roots.txt',
+        '/usr/share/wordlists/metasploit/lync_subdomains.txt',
+        '/usr/share/wordlists/metasploit/malicious_urls.txt',
+        '/usr/share/wordlists/wfuzz/general/admin-panels.txt',
+        '/usr/share/wordlists/wfuzz/general/mutations_common_n.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt',
+        '/usr/share/seclists/Discovery/Web-Content/common.txt',
+        '/usr/share/seclists/Discovery/Web-Content/raft-small-directories.txt'
+      ],
+      host_names: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/nmap.lst',
+        '/usr/share/wordlists/dirb/others/names.txt',
+        '/usr/share/wordlists/amass/jhaddix_all.txt',
+        '/usr/share/wordlists/dirb/spanish.txt',
+        '/usr/share/wordlists/dirbuster/apache-user-enum-1.0.txt',
+        '/usr/share/wordlists/dirbuster/apache-user-enum-2.0.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-small.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt',
+        '/usr/share/wordlists/metasploit/can_flood_frames.txt',
+        '/usr/share/wordlists/wfuzz/general/admin-panels.txt',
+        '/usr/share/wordlists/wfuzz/general/medium.txt',
+        '/usr/share/wordlists/wfuzz/general/megabeast.txt',
+        '/usr/share/wordlists/wfuzz/general/mutations_common_n.txt',
+        '/usr/share/wordlists/dnsmap.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Discovery/Web-Content/common.txt'
+      ],
+      cookies_sessions: [
+        ' ------------ WORDLISTS ------------ '
+      ],
+      extensions: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/dirb/extensions_common.n.txt',
+        '/usr/share/wordlists/dirb/mutations_common.n.txt',
+        '/usr/share/wordlists/wfuzz/general/extensions_common_n.txt',
+        '/usr/share/wordlists/wfuzz/webservices/ws-files.txt'
+      ],
+      dirs_files: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/amass/jhaddix_all.txt',
+        '/usr/share/wordlists/dirb/big.txt',
+        '/usr/share/wordlists/wfuzz/general/big.txt',
+        '/usr/share/wordlists/dirb/common.txt',
+        '/usr/share/wordlists/wfuzz/general/common.txt',
+        '/usr/share/wordlists/dirb/spanish.txt',
+        '/usr/share/wordlists/wfuzz/general/spanish.txt',
+        '/usr/share/wordlists/dirb/catala.txt',
+        '/usr/share/wordlists/wfuzz/general/catala.txt',
+        '/usr/share/wordlists/dirb/euskera.txt',
+        '/usr/share/wordlists/wfuzz/general/euskera.txt',
+        '/usr/share/wordlists/dirb/small.txt',
+        '/usr/share/wordlists/dirb/indexes.txt',
+        '/usr/share/wordlists/dirbuster/apache-user-enum-1.0.txt',
+        '/usr/share/wordlists/dirbuster/apache-user-enum-2.0.txt',
+        '/usr/share/wordlists/dirbuster/directories.jbrofuzz',
+        '/usr/share/wordlists/dirbuster/directory-list-1.0.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-2.3-small.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-small.txt',
+        '/usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt',
+        '/usr/share/wordlists/metasploit/common_roots.txt',
+        '/usr/share/wordlists/metasploit/sensitive_files.txt',
+        '/usr/share/wordlists/metasploit/sensitive_files_win.txt',
+        '/usr/share/wordlists/wfuzz/general/admin-panels.txt',
+        '/usr/share/wordlists/wfuzz/general/medium.txt',
+        '/usr/share/wordlists/wfuzz/general/megabeast.txt',
+        '/usr/share/wordlists/wfuzz/general/mutations_common_n.txt',
+        '/usr/share/wordlists/wfuzz/general/test.txt',
+        '/usr/share/wordlists/wfuzz/webservices/ws-dirs.txt'
+      ],
+      injection_payloads: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/dirb/others/names.txt',
+        '/usr/share/wordlists/dirb/others/best110.txt',
+        '/usr/share/wordlists/dirb/others/best1050.txt',
+        '/usr/share/wordlists/wfuzz/general/http_methods.txt',
+        '/usr/share/wordlists/sqlmap.txt',
+        '/usr/share/wordlists/wfuzz/injections/SQL.txt',
+        '/usr/share/wordlists/wfuzz/injections/All_attack.txt',
+        '/usr/share/wordlists/wfuzz/injections/TraversaL.txt',
+        '/usr/share/wordlists/wfuzz/injections/XML.txt',
+        '/usr/share/wordlists/wfuzz/injections/XSS.txt',
+        ' ------------ SECLISTS ------------ ',
+        '/usr/share/seclists/Fuzzing/general/xss.txt',
+        '/usr/share/seclists/Fuzzing/SQLi/generic-sql-injections.txt',
+        '/usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt',
+        '/usr/share/seclists/Miscellaneous/web-shells.txt'
+      ],
+      chars_nums: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/dirb/stress/alphanum_case.txt',
+        '/usr/share/wordlists/dirb/stress/alphanum_case_extra.txt',
+        '/usr/share/wordlists/dirb/stress/char.txt',
+        '/usr/share/wordlists/dirb/stress/doble_uri_hex.txt',
+        '/usr/share/wordlists/dirb/stress/test_ext.txt',
+        '/usr/share/wordlists/dirb/stress/unicode.txt',
+        '/usr/share/wordlists/dirb/stress/uri_hex.txt',
+        '/usr/share/wordlists/metasploit/keyboard_patterns.txt',
+        '/usr/share/wordlists/wfuzz/injections/bad_chars.txt'
+      ],
+      vulns: [
+        ' ------------ WORDLISTS ------------ ',
+        '/usr/share/wordlists/dirb/vulns/apache.txt',
+        '/usr/share/wordlists/dirb/vulns/axis.txt',
+        '/usr/share/wordlists/dirb/vulns/cgis.txt',
+        '/usr/share/wordlists/dirb/vulns/coldfusion.txt',
+        '/usr/share/wordlists/dirb/vulns/domino.txt',
+        '/usr/share/wordlists/dirb/vulns/fatwire.txt',
+        '/usr/share/wordlists/dirb/vulns/fatwire_pagename_s.txt',
+        '/usr/share/wordlists/dirb/vulns/frontpage.txt',
+        '/usr/share/wordlists/dirb/vulns/hpsmh.txt',
+        '/usr/share/wordlists/dirb/vulns/hyperion.txt',
+        '/usr/share/wordlists/dirb/vulns/iis.txt',
+        '/usr/share/wordlists/dirb/vulns/iplanet.txt',
+        '/usr/share/wordlists/dirb/vulns/jboss.txt',
+        '/usr/share/wordlists/dirb/vulns/jersey.txt',
+        '/usr/share/wordlists/dirb/vulns/jrun.txt',
+        '/usr/share/wordlists/dirb/vulns/netware.txt',
+        '/usr/share/wordlists/dirb/vulns/oracle.txt',
+        '/usr/share/wordlists/dirb/vulns/ror.txt',
+        '/usr/share/wordlists/dirb/vulns/sap.txt',
+        '/usr/share/wordlists/dirb/vulns/sharepoint.txt',
+        '/usr/share/wordlists/dirb/vulns/sunas.txt',
+        '/usr/share/wordlists/dirb/vulns/tomcat.txt',
+        '/usr/share/wordlists/dirb/vulns/vignette.txt',
+        '/usr/share/wordlists/dirb/vulns/webcubic.txt',
+        '/usr/share/wordlists/dirb/vulns/websphere.txt',
+        '/usr/share/wordlists/dirb/vulns/testss.txt',
+        '/usr/share/wordlists/metasploit/grafana_plugins.txt',
+        '/usr/share/wordlists/metasploit/wp-exploitable-plugins.txt',
+        '/usr/share/wordlists/metasploit/wp-exploitable-themes.txt',
+        '/usr/share/wordlists/metasploit/wp-plugins.txt',
+        '/usr/share/wordlists/metasploit/wp-themes.txt'
+      ]
+    };
+
+    function generateWordlistPaths() {
+      const category = document.getElementById('wordlistCategory').value;
+      const output = document.getElementById('wordlistOutput');
+
+      if (!category) {
+        output.value = 'Por favor, selecciona una categoría.';
+        return;
+      }
+
+      const paths = wordlistDatabase[category];
+      if (paths && paths.length > 0) {
+        output.value = `Rutas de wordlists para ${category.replace('_', ' ').toUpperCase()} en Kali Linux:\n\n${paths.join('\n')}`;
+      } else {
+        output.value = `No se encontraron wordlists para la categoría ${category.replace('_', ' ').toUpperCase()}.`;
+      }
+    }
+  </script>
+</body>
+</html>
