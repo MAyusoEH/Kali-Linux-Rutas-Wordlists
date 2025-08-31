@@ -1,5 +1,5 @@
 ## Vista Previa de la Herramienta HTML:
-![Captura de pantalla del proyecto](https://github.com/MAyusoEH/Kali-Linux-Wordlist-Route-Finder/pic_wrdlst.png)
+![Captura de pantalla del proyecto](https://github.com/MAyusoEH/Kali-Linux-Rutas_Wordlists/pic_wrdlst.png)
 
 
 ## XXXX:
@@ -8,7 +8,7 @@
 
 1- Descargar el repositorio al equipo local con la siguiente línea:
 
-``git clone https://github.com/MAyusoEH/Kali-Linux-Wordlist-Route-Finder.git``
+``git clone https://github.com/MAyusoEH/Kali-Linux-Rutas_Wordlists.git``
 
 2- Ejecutar el archivo default_creds.html con el navegador.
 
