@@ -1,5 +1,5 @@
 ## Vista Previa de la Herramienta HTML:
-![Captura de pantalla del proyecto](https://github.com/MAyusoEH/Kali-Linux-Rutas_Wordlists/pic_wrdlst.png)
+![Captura de pantalla del proyecto](https://github.com/MAyusoEH/Kali-Linux-Rutas-Wordlists/blob/main/pic_wrdlst.png)
 
 
 ## XXXX:
