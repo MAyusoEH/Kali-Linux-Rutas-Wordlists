@@ -11,7 +11,7 @@ Esta herramienta sirve para buscar las rutas de las wordlists de Kali Linux por 
 
 ``git clone https://github.com/MAyusoEH/Kali-Linux-Rutas_Wordlists.git``
 
-2- Ejecutar el archivo kali_wordlist_finder.html con el navegador.
+2- Ejecutar el archivo "kali_wordlist_finder.html" con el navegador.
 
 
 ## Licencia:
