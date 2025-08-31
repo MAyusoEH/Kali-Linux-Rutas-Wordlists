@@ -2,7 +2,8 @@
 ![Captura de pantalla del proyecto](https://github.com/MAyusoEH/Kali-Linux-Rutas-Wordlists/blob/main/pic_wrdlst.png)
 
 
-## XXXX:
+## ¿Para qué sirve:
+Esta herramienta sirve para buscar las rutas de las wordlists de Kali Linux por categorías.
 
 ## Cómo usar:
 
